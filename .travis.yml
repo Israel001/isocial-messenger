@@ -1,0 +1,18 @@
+language: dart
+os: windows
+addons:
+  apt:
+    packages:
+      - lib32stdc++6
+install:
+  - git clone https://github.com/flutter/flutter.git -b v1.5.4-hotfixes --depth 1
+  - export PATH=./flutter/bin:$PATH
+  - flutter doctor
+  - flutter --version
+script:
+  - flutter packages get
+  - flutter analyze --no-pub --no-current-package lib/ test/
+  - flutter test --no-pub test/
+cache:
+  directories:
+    - $HOME/.pub-cache
