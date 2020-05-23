@@ -4,7 +4,7 @@ import 'package:isocial_messenger/main.dart';
 
 void main() {
   testWidgets('Checking if hello world shows up', (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(iSocialMessenger());
     expect(find.text('Hello World!'), findsOneWidget);
   });
 }

@@ -1,47 +1,87 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:downloads_path_provider/downloads_path_provider.dart';
+import 'package:isocial_messenger/pages/AuthPage.dart';
+import 'package:isocial_messenger/pages/ConversationList.dart';
 
-class MyApp extends StatelessWidget {
+import 'package:isocial_messenger/repositories/AuthenticationRepository.dart';
+import 'package:isocial_messenger/repositories/StorageRepository.dart';
+import 'package:isocial_messenger/repositories/ChatRepository.dart';
+import 'package:isocial_messenger/repositories/UserDataRepository.dart';
+import 'package:isocial_messenger/widgets/ProgressWidget.dart';
+
+import 'config/Constants.dart';
+import 'config/Themes.dart';
+import 'utils/SharedObjects.dart';
+import 'blocs/authentication/Bloc.dart';
+import 'blocs/chat/Bloc.dart';
+
+void main() async {
+  final AuthenticationRepository authRepository = AuthenticationRepository();
+  final UserDataRepository userDataRepository = UserDataRepository();
+  final ChatRepository chatRepository = ChatRepository();
+  final StorageRepository storageRepository = StorageRepository();
+  SharedObjects.prefs = await CachedSharedPreferences.getInstance();
+  Firestore.instance.settings(timestampsInSnapshotsEnabled: true);
+  Constants.downloadsDirPath = (await DownloadsPathProvider.downloadsDirectory)
+    .path;
+
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+          builder: (context) => AuthenticationBloc(
+            authenticationRepository: authRepository,
+            userDataRepository: userDataRepository
+          )..dispatch(AppLaunched()),
+        ),
+        BlocProvider<ChatBloc>(
+          builder: (context) => ChatBloc(
+            chatRepository: chatRepository,
+            storageRepository: storageRepository,
+            userDataRepository: userDataRepository
+          )
+        )
+      ],
+      child: iSocialMessenger()
+    )
+  );
+}
+
+// ignore: camel_case_types
+class iSocialMessenger extends StatefulWidget {
+  @override
+  iSocialMessengerState createState() => iSocialMessengerState();
+}
+
+// ignore: camel_case_types
+class iSocialMessengerState extends State<iSocialMessenger> {
+  static ThemeData theme = SharedObjects.prefs.getBool(Constants.configDarkMode)
+    ? Themes.dark : Themes.light;
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'iSocial Messenger',
-      theme: ThemeData(
-        primarySwatch: Colors.yellow,
+      debugShowCheckedModeBanner: false,
+      theme: theme,
+      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+          if (state is UnAuthenticated) {
+            return AuthPage();
+          } else if (state is Authenticated) {
+            return ConversationList();
+          } else {
+            return Container(
+              color: Colors.white,
+              child: circularProgress(context)
+            );
+          }
+        }
       ),
-      home: MyHomePage(title: 'iSocial Messenger'),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text(widget.title),
-        ),
-        body: Center(
-            child:Text('Hello World!')
-        )
-    );
-
   }
 }

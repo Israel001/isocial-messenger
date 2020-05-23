@@ -1,0 +1,28 @@
+{
+  "name": "ISMIcons",
+  "css_prefix_text": "",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "eabb1a194101764c584084deccf1118a",
+      "css": "moon",
+      "code": 61830,
+      "src": "fontawesome5"
+    },
+    {
+      "uid": "3fdc2fc480ceb6458d0e34c56e5bce36",
+      "css": "question_circle",
+      "code": 61529,
+      "src": "fontawesome5"
+    },
+    {
+      "uid": "f2600038cee14a5eaad6d3ae5a3d5119",
+      "css": "book",
+      "code": 61485,
+      "src": "fontawesome5"
+    }
+  ]
+}

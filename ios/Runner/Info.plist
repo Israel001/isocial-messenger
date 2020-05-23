@@ -41,5 +41,26 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<!-- Google Sign-in Section -->
+      <key>CFBundleURLTypes</key>
+      <array>
+      	<dict>
+      		<key>CFBundleTypeRole</key>
+      		<string>Editor</string>
+      		<key>CFBundleURLSchemes</key>
+      		<array>
+      			<!-- TODO Replace this value: -->
+      			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+      			<string>com.googleusercontent.apps.433684092035-vud3p2kdk7r5e543fof5k7lfm2kgg7sq</string>
+      		</array>
+      	</dict>
+      </array>
+      <!-- End of the Google Sign-in Section -->
+      <key>NSPhotoLibraryUsageDescription</key>
+      <string>For uploading image(s) to iSocial from Gallery</string>
+      <key>NSCameraUsageDescription</key>
+      <string>For uploading image(s) to iSocial from Camera</key>
+      <key>NSMicrophoneUsageDescription</key>
+      <string>For capturing audio from the device, by iSocial</key>
 </dict>
 </plist>
